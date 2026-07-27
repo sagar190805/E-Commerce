@@ -1,67 +1,5 @@
 // --- State ---
-const products = [
-    {
-        id: 1,
-        title: "Aura Pro Noise-Cancelling Headphones",
-        category: "audio",
-        price: 349.99,
-        image: "assets/images/headphones.jpg",
-        description: "Experience pure silence with our next-gen active noise-cancelling technology. Features 40 hours of battery life, plush memory foam ear cups, and studio-quality sound.",
-        features: ["Active Noise Cancellation", "40-hour Battery", "High-Fidelity Audio", "Bluetooth 5.3"],
-        featured: true
-    },
-    {
-        id: 2,
-        title: "Nexus Smartwatch Series X",
-        category: "wearables",
-        price: 299.99,
-        image: "assets/images/smartwatch.jpg",
-        description: "Your fitness and life companion. The Nexus Series X features an edge-to-edge AMOLED display, advanced health tracking, and up to 5 days of battery life.",
-        features: ["AMOLED Display", "Heart Rate Monitor", "GPS Tracking", "5-Day Battery"],
-        featured: true
-    },
-    {
-        id: 3,
-        title: "Tactile V2 Mechanical Keyboard",
-        category: "peripherals",
-        price: 159.99,
-        image: "assets/images/keyboard.jpg",
-        description: "Elevate your typing experience. Built with premium aluminum, customizable RGB per-key lighting, and hot-swappable tactile switches for the ultimate typing feel.",
-        features: ["Hot-swappable Switches", "Per-key RGB", "Aluminum Body", "Wireless / Wired"],
-        featured: false
-    },
-    {
-        id: 4,
-        title: "Lumina Mirrorless Camera",
-        category: "cameras",
-        price: 1299.99,
-        image: "assets/images/camera.jpg",
-        description: "Capture the world in stunning detail. The Lumina features a 45MP full-frame sensor, 8K video recording, and lightning-fast autofocus in a sleek, compact body.",
-        features: ["45MP Full-Frame Sensor", "8K Video", "Eye Autofocus", "Weather Sealed"],
-        featured: true
-    },
-    // Adding some extra products to make the catalog look full, even if we reuse images
-    {
-        id: 5,
-        title: "Aura Studio Earbuds",
-        category: "audio",
-        price: 149.99,
-        image: "assets/images/headphones.jpg",
-        description: "Compact design, massive sound. The Aura Studio Earbuds offer punchy bass, crystal-clear vocals, and an IPX7 water resistance rating.",
-        features: ["IPX7 Water Resistance", "Punchy Bass", "Compact Case", "Touch Controls"],
-        featured: false
-    },
-    {
-        id: 6,
-        title: "Pro Creator Mouse",
-        category: "peripherals",
-        price: 89.99,
-        image: "assets/images/keyboard.jpg", // Reusing keyboard image for peripherals demo
-        description: "Ergonomic precision for creators. Features a 25K DPI sensor, horizontal scroll wheel, and up to 3 devices multi-connect.",
-        features: ["25K DPI Sensor", "Ergonomic Design", "Multi-device", "USB-C Charging"],
-        featured: false
-    }
-];
+let products = [];
 
 let cart = [];
 let currentCategory = 'all';
@@ -92,10 +30,34 @@ const modalBody = document.getElementById('modalBody');
 const toastContainer = document.getElementById('toastContainer');
 
 // --- Initialization ---
-function init() {
+async function init() {
+    await fetchProducts();
+    populateCategories();
     renderProducts();
     setupEventListeners();
     loadCart();
+}
+
+async function fetchProducts() {
+    try {
+        const response = await fetch('https://fakestoreapi.com/products');
+        products = await response.json();
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        showToast('Failed to load products', 'error');
+    }
+}
+
+function populateCategories() {
+    const categories = [...new Set(products.map(p => p.category))];
+    const categoryList = document.getElementById('categoryList');
+    categoryList.innerHTML = '<li class="active" data-category="all">All Products</li>';
+    categories.forEach(category => {
+        const li = document.createElement('li');
+        li.dataset.category = category;
+        li.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        categoryList.appendChild(li);
+    });
 }
 
 // --- Render Logic ---
@@ -115,7 +77,7 @@ function renderProducts() {
     } else if (currentSort === 'price-high') {
         filteredProducts.sort((a, b) => b.price - a.price);
     } else if (currentSort === 'featured') {
-        filteredProducts.sort((a, b) => (a.featured === b.featured) ? 0 : a.featured ? -1 : 1);
+        filteredProducts.sort((a, b) => (b.rating?.rate || 0) - (a.rating?.rate || 0));
     }
 
     productGrid.innerHTML = '';
@@ -268,9 +230,9 @@ function openProductModal(productId) {
             <h2 class="modal-title">${product.title}</h2>
             <div class="modal-price">$${product.price.toFixed(2)}</div>
             <p class="modal-desc">${product.description}</p>
-            <ul class="modal-features">
-                ${product.features.map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('')}
-            </ul>
+            <div class="modal-features">
+                <p><i class="fa-solid fa-star" style="color: #fbbf24;"></i> ${product.rating?.rate} / 5 (${product.rating?.count} reviews)</p>
+            </div>
             <div class="modal-actions">
                 <button class="add-to-cart-btn" onclick="addToCart(${product.id}); closeProductModal();">
                     <i class="fa-solid fa-cart-plus"></i> Add to Cart
