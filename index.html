@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Premium Tech E-Commerce</title>
+    <meta name="description" content="Discover premium tech gadgets and audio gear with sleek, modern design.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar glass-panel">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fa-solid fa-layer-group logo-icon"></i>
+                <span>AURA</span>
+            </div>
+            
+            <div class="search-bar">
+                <i class="fa-solid fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search for premium tech...">
+            </div>
+
+            <div class="nav-actions">
+                <button class="cart-btn" id="cartToggleBtn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Sidebar Filters -->
+        <aside class="sidebar glass-panel">
+            <div class="filter-group">
+                <h3>Categories</h3>
+                <ul class="category-list" id="categoryList">
+                    <li class="active" data-category="all">All Products</li>
+                    <li data-category="audio">Audio</li>
+                    <li data-category="wearables">Wearables</li>
+                    <li data-category="peripherals">Peripherals</li>
+                    <li data-category="cameras">Cameras</li>
+                </ul>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Max Price</h3>
+                <div class="price-slider-container">
+                    <input type="range" id="priceRange" min="0" max="3000" step="50" value="3000">
+                    <div class="price-labels">
+                        <span>$0</span>
+                        <span id="priceValueLabel">$3000</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Product Grid -->
+        <section class="products-section">
+            <div class="section-header">
+                <h2 id="sectionTitle">Discover Products</h2>
+                <div class="sort-dropdown">
+                    <select id="sortSelect">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Products will be injected here via JS -->
+            <div class="product-grid" id="productGrid">
+                <!-- Product Card Template (rendered by JS) -->
+            </div>
+            
+            <div class="no-results" id="noResults" style="display: none;">
+                <i class="fa-solid fa-ghost"></i>
+                <p>No products found matching your criteria.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-sidebar glass-panel" id="cartSidebar">
+            <div class="cart-header">
+                <h2>Your Cart</h2>
+                <button class="close-btn" id="closeCartBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="cart-items" id="cartItemsContainer">
+                <!-- Cart items injected via JS -->
+            </div>
+            
+            <div class="cart-footer">
+                <div class="cart-total-row">
+                    <span>Total</span>
+                    <span class="total-price" id="cartTotalPrice">$0.00</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-content glass-panel">
+            <button class="close-btn" id="closeModalBtn">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
